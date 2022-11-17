@@ -15,7 +15,7 @@ defmodule Gyx.Core.Exp do
   replay buffer to consider when sampling. For example, a timestamp that could
   guarantee an atomic broadcasted replay buffer.
   """
-  defstruct state: nil, action: nil, reward: 0, next_state: nil, done: false, info: %{}
+  defstruct state: nil, action: nil, reward: 0, next_state: nil, done: false, truncated: false, info: %{}
 
   @type t :: %__MODULE__{
           state: any(),
@@ -23,6 +23,7 @@ defmodule Gyx.Core.Exp do
           reward: float(),
           next_state: any(),
           done: boolean(),
+          truncated: boolean(),
           info: map()
         }
 end

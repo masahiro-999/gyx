@@ -68,7 +68,7 @@ defmodule Gyx.Environments.Gym do
   end
 
   def make(environment, environment_name) do
-    GenServer.call(environment, {:make, environment_name})
+    GenServer.call(environment, {:make, environment_name}, :infinity)
   end
 
   @impl true
@@ -114,7 +114,7 @@ defmodule Gyx.Environments.Gym do
   end
 
   def handle_call({:act, action}, _from, state) do
-    {next_env, {gym_state, reward, done, info}} =
+    {next_env, {gym_state, reward, done, truncated, info}} =
       Python.call(
         state.session,
         :gym_interface,
@@ -128,6 +128,7 @@ defmodule Gyx.Environments.Gym do
       next_state: gym_state,
       reward: reward,
       done: done,
+      truncated: truncated,
       info: %{gym_info: info}
     }
 

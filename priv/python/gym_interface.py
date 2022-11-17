@@ -1,21 +1,25 @@
 import gym
 from erlport.erlang import set_encoder, set_decoder
 from erlport.erlterms import List
-
+import numpy as np
 
 def make(envname):
     en = str(envname, encoding='ascii')
     env = gym.make(en)
     print("             < 🐍  >  Loaded Gym environment {0} from Python ✔".format(envname))
     initial_state = env.reset()
+    if type(initial_state)==tuple and type(initial_state[0]) == np.ndarray:
+        initial_state =(initial_state[0].tolist(),)
     action_space = str(env.action_space).strip()
     observation_space = str(env.observation_space).strip()
     return (env, initial_state, action_space, observation_space)
 
 
 def step(env, _step):
-    state, reward, done, info = env.step(_step)
-    return (env, (state, float(reward), done, info))
+    state, reward, done, truncated, info = env.step(_step)
+    if type(state) == np.ndarray:
+        state =state.tolist()
+    return (env, (state, float(reward), done, truncated, info))
 
 
 def render(env):
@@ -26,6 +30,9 @@ def render(env):
 
 def reset(env):
     initial_state = env.reset()
+    if type(initial_state) == np.ndarray:
+        initial_state =initial_state.tolist()
+
     return (env,
             initial_state,
             str(env.action_space).strip(),
