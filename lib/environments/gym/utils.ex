@@ -6,7 +6,9 @@ defmodule Gyx.Gym.Utils do
   """
   @space_types [{~r/Discrete\((?<n>\d+)\)/, :discrete},
                 {~r/Box\((?<shape>((\d)+,)+)\)/x, :box},
-                {~r/Box\((?<shape>((\d)+,)+(\d)+)\)/x, :box}
+                {~r/Box\((?<shape>((\d)+,)+(\d)+)\)/x, :box},
+                {~r/Box\(\[.*\],\[.*\],\((?<shape>((\d)+,)+)\)/x, :box},
+                {~r/Box\(\[.*\],\[.*\],\((?<shape>((\d)+,)+(\d)+)\)/x, :box}
               ]
 
   @doc """
