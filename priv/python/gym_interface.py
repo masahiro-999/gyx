@@ -16,10 +16,10 @@ def make(envname):
 
 
 def step(env, _step):
-    state, reward, done, truncated, info = env.step(_step)
+    state, reward, terminated, truncated, info = env.step(_step)
     if type(state) == np.ndarray:
         state =state.tolist()
-    return (env, (state, float(reward), done, truncated, info))
+    return (env, (state, float(reward), terminated, truncated, info))
 
 
 def render(env):

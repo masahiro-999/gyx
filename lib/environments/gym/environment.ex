@@ -114,7 +114,7 @@ defmodule Gyx.Environments.Gym do
   end
 
   def handle_call({:act, action}, _from, state) do
-    {next_env, {gym_state, reward, done, truncated, info}} =
+    {next_env, {gym_state, reward, terminated, truncated, info}} =
       Python.call(
         state.session,
         :gym_interface,
@@ -127,7 +127,7 @@ defmodule Gyx.Environments.Gym do
       action: action,
       next_state: gym_state,
       reward: reward,
-      done: done,
+      terminated: terminated,
       truncated: truncated,
       info: %{gym_info: info}
     }

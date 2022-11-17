@@ -116,7 +116,8 @@ defmodule Gyx.Environments.Pure.Blackjack do
       action: action,
       next_state: env_state_transformer(next_state),
       reward: 0,
-      done: true,
+      terminated: true,
+      truncated: false,
       info: %{}
     }
 
@@ -139,7 +140,8 @@ defmodule Gyx.Environments.Pure.Blackjack do
            action: action,
            next_state: env_state_transformer(next_state),
            reward: -1,
-           done: true,
+           terminated: true,
+           truncated: false,
            info: %{}
          }, next_state}
 
@@ -150,7 +152,8 @@ defmodule Gyx.Environments.Pure.Blackjack do
            action: action,
            next_state: env_state_transformer(next_state),
            reward: 0,
-           done: false,
+           terminated: false,
+           truncated: false,
            info: %{}
          }, next_state}
     end

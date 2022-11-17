@@ -99,7 +99,8 @@ defmodule Gyx.Environments.Pure.FrozenLake do
        action: action,
        next_state: env_state_transformer(new_state),
        reward: if(current == "G", do: 1.0, else: 0.0),
-       done: current in ["H", "G"],
+       terminated: current in ["H", "G"],
+       truncated: false,
        info: %{}
      }, new_state}
   end

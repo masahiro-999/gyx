@@ -84,7 +84,7 @@ defmodule Gyx.Trainers.TrainerSarsa do
       })
 
     exp =
-      %Exp{done: done, state: s, action: a, reward: r, next_state: ss} =
+      %Exp{terminated: terminated, state: s, action: a, reward: r, next_state: ss} =
       t.environment
       |> @env_module.step(next_action)
 
@@ -96,7 +96,7 @@ defmodule Gyx.Trainers.TrainerSarsa do
 
     @agent_module.td_learn(t.agent, {s, a, r, ss, aa})
     t = %{t | trajectory: [exp | t.trajectory]}
-    run_episode(t, done)
+    run_episode(t, terminated)
   end
 
   defp initialize_trajectory(t), do: %{t | trajectory: []}
