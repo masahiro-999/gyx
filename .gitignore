@@ -26,3 +26,5 @@ gyx-*.tar
 
 # Ignore elixir language server files
 /.elixir_ls/
+
+*.pyc
