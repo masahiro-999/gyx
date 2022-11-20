@@ -140,7 +140,7 @@ defmodule Gyx.Environments.Gym do
     {env, initial_state, action_space, observation_space} =
       Python.call(state.session, :gym_interface, :reset, [state.env])
 
-    {:reply, %Exp{},
+    {:reply, initial_state,
      %{
        state
        | env: env,

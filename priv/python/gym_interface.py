@@ -8,8 +8,11 @@ def make(envname):
     env = gym.make(en)
     print("             < 🐍  >  Loaded Gym environment {0} from Python ✔".format(envname))
     initial_state = env.reset()
-    if type(initial_state)==tuple and type(initial_state[0]) == np.ndarray:
-        initial_state =(initial_state[0].tolist(),)
+    try:
+        if len(initial_state) == 2 and type(initial_state[0]) == np.ndarray:
+            initial_state =(initial_state[0].tolist(),initial_state[1])
+    except:
+        pass
     action_space = str(env.action_space).strip()
     observation_space = str(env.observation_space).strip()
     return (env, initial_state, action_space, observation_space)
@@ -30,8 +33,11 @@ def render(env):
 
 def reset(env):
     initial_state = env.reset()
-    if type(initial_state) == np.ndarray:
-        initial_state =initial_state.tolist()
+    try:
+        if len(initial_state) == 2 and type(initial_state[0]) == np.ndarray:
+            initial_state =(initial_state[0].tolist(),initial_state[1])
+    except:
+        pass
 
     return (env,
             initial_state,
