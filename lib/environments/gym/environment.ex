@@ -67,8 +67,8 @@ defmodule Gyx.Environments.Gym do
     GenServer.call(environment, {:render, output_device, opts})
   end
 
-  def make(environment, environment_name) do
-    GenServer.call(environment, {:make, environment_name}, :infinity)
+  def make(environment, environment_name, opt \\%{}) do
+    GenServer.call(environment, {:make, environment_name, opt}, :infinity)
   end
 
   @impl true
@@ -85,18 +85,19 @@ defmodule Gyx.Environments.Gym do
   end
 
   def handle_call(
-        {:make, environment_name},
+        {:make, environment_name, opt},
         _from,
         %{session: session}
       ) do
     Logger.info("Starting OpenAI Gym environment: " <> environment_name, ansi_color: :magenta)
 
+    opt = Enum.into(opt, %{}, fn {k,v} -> {Atom.to_string(k),v} end)
     {env, initial_state, action_space, observation_space} =
       Python.call(
         session,
         :gym_interface,
         :make,
-        [environment_name]
+        [environment_name, opt]
       )
 
     Logger.info("Environment created on Python process: " <> inspect(session),
@@ -114,7 +115,7 @@ defmodule Gyx.Environments.Gym do
   end
 
   def handle_call({:act, action}, _from, state) do
-    {next_env, {gym_state, reward, done, truncated, info}} =
+    {next_env, {gym_state, reward, terminated, truncated, info}} =
       Python.call(
         state.session,
         :gym_interface,
@@ -127,7 +128,7 @@ defmodule Gyx.Environments.Gym do
       action: action,
       next_state: gym_state,
       reward: reward,
-      done: done,
+      terminated: terminated,
       truncated: truncated,
       info: %{gym_info: info}
     }
@@ -137,10 +138,10 @@ defmodule Gyx.Environments.Gym do
 
   @impl true
   def handle_call(:reset, _from, state) do
-    {env, initial_state, action_space, observation_space} =
+    {env, {initial_state, info}, action_space, observation_space} =
       Python.call(state.session, :gym_interface, :reset, [state.env])
 
-    {:reply, %Exp{},
+    {:reply, {initial_state, info},
      %{
        state
        | env: env,
