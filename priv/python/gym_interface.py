@@ -23,11 +23,12 @@ def make(envname, opt):
     action_space = str(env.action_space).strip()
     observation_space = str(env.observation_space).strip()
     env_list.append(env)
-    index = len(env_list)
+    index = len(env_list)-1
     return (index, initial_state, action_space, observation_space)
 
 
 def step(_env, _step):
+    env = env_list[_env]
     state, reward, terminated, truncated, info = env.step(_step)
     if type(state) == np.ndarray:
         state =state.tolist()
